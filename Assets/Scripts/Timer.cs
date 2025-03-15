@@ -17,6 +17,7 @@ public class Timer : MonoBehaviour
     {
         _maxTime = maxTime;
         _currentTime = maxTime;
+        Play();
     }
 
     public void Play()
@@ -45,14 +46,15 @@ public class Timer : MonoBehaviour
         if (!_isPlaying) return;
         
         var deltaTime = Time.fixedDeltaTime;
+        _currentTime -= deltaTime;
 
-        if (deltaTime >= _currentTime)
+        if (_currentTime <= 0)
         {
             OnTimerEnd?.Invoke();
             Stop();
             return;
         }
         _currentTime -= deltaTime;
-        _timerText.text = _currentTime.ToString("00:00");
+        _timerText.text = _currentTime.ToString("00.00");
     }
 }

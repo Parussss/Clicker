@@ -13,28 +13,29 @@ public class EnemyManager : MonoBehaviour {
     public void Initialize(HealthBar healthBar) {
         _healthBar = healthBar;
         SpawnEnemy();
-    }
+    }  
 
     public void SpawnEnemy() {
         _currentEnemyData = _enemiesConfig.Enemies[0];
 
+        InitHpBar();
+        
         if (_currentEnemy == null)
         {
             _currentEnemy = Instantiate(_enemiesConfig.EnemyPrefab, _enemyContainer);
             _currentEnemy.OnDead += () => OnLevelPassed?.Invoke();
+            _currentEnemy.OnDamaged += _healthBar.DecreaseValue;
+            _currentEnemy.OnDead += _healthBar.Hide;
         }
         
         _currentEnemy.Initialize(_currentEnemyData);
         
-        
-        InitHpBar();
     }
 
     private void InitHpBar() {
         _healthBar.Show();
         _healthBar.SetMaxValue(_currentEnemyData.Health);
-        _currentEnemy.OnDamaged += _healthBar.DecreaseValue;
-        _currentEnemy.OnDead += _healthBar.Hide;
+        
     }
 
     public void DamageCurrentEnemy(float damage) {
